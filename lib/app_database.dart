@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
@@ -9,14 +10,17 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 import 'pet.dart';
 import 'pet_dao.dart';
+import 'veterinarian.dart';
+import 'veterinarian_dao.dart';
+
 
 part 'app_database.g.dart';
 
 // Main database class for the Pet Tracker application.
 // This is the main database class for my Pet feature.
 // It connects the Pet entity with the PetDao.
-@Database(version: 1, entities: [Pet])
+@Database(version: 1, entities: [Pet, Veterinarian])
 abstract class AppDatabase extends FloorDatabase {
-  // This lets me access all pet-related database actions.
   PetDao get petDao;
+  VeterinarianDao get veterinarianDao;
 }
