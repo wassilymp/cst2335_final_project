@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
+import  'package:flutter/material.dart';
 import 'pet_page.dart';
 import 'vaccine_page.dart';
 import 'veterinarian_page.dart';
+import 'PetOwnerListPage.dart';
 
 /// Main entry point of the group project application.
 void main() {
@@ -72,11 +73,13 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 15),
 
             // Izzy's module
+
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Pet Owner module will be connected soon.'),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const PetOwnerListPage(),
                   ),
                 );
               },

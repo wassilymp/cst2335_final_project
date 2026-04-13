@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 
+import 'PetOwner.dart';
+import 'PetOwnerDao.dart';
+
 // Name:Keren-grace Niragi Muyangayanga
 // student no.:041173528
 // Project's Topic : Pet
@@ -19,8 +22,9 @@ part 'app_database.g.dart';
 // Main database class for the Pet Tracker application.
 // This is the main database class for my Pet feature.
 // It connects the Pet entity with the PetDao.
-@Database(version: 1, entities: [Pet, Veterinarian])
+@Database(version: 1, entities: [Pet, Veterinarian, PetOwner ])
 abstract class AppDatabase extends FloorDatabase {
   PetDao get petDao;
   VeterinarianDao get veterinarianDao;
+  PetOwnerDao get petOwnerDao;
 }
