@@ -99,7 +99,7 @@ class _PetPageState extends State<PetPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)!.translate('no_previous_pet')!,
+            AppLocalizations.of(context)!.translate('no_previous_pet'),
           ),
         ),
       );
@@ -126,7 +126,7 @@ class _PetPageState extends State<PetPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)!.translate('fill_fields')!,
+            AppLocalizations.of(context)!.translate('fill_fields'),
           ),
         ),
       );
@@ -163,16 +163,16 @@ class _PetPageState extends State<PetPage> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            AppLocalizations.of(context)!.translate('success')!,
+            AppLocalizations.of(context)!.translate('success'),
           ),
           content: Text(
-            AppLocalizations.of(context)!.translate('pet_saved')!,
+            AppLocalizations.of(context)!.translate('pet_saved'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                AppLocalizations.of(context)!.translate('ok')!,
+                AppLocalizations.of(context)!.translate('ok'),
               ),
             ),
           ],
@@ -193,7 +193,7 @@ class _PetPageState extends State<PetPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            AppLocalizations.of(context)!.translate('fill_fields')!,
+            AppLocalizations.of(context)!.translate('fill_fields'),
           ),
         ),
       );
@@ -258,16 +258,16 @@ class _PetPageState extends State<PetPage> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            AppLocalizations.of(context)!.translate('instructions')!,
+            AppLocalizations.of(context)!.translate('instructions'),
           ),
           content: Text(
-            AppLocalizations.of(context)!.translate('instructions_text')!,
+            AppLocalizations.of(context)!.translate('instructions_text'),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: Text(
-                AppLocalizations.of(context)!.translate('ok')!,
+                AppLocalizations.of(context)!.translate('ok'),
               ),
             ),
           ],
@@ -303,7 +303,7 @@ class _PetPageState extends State<PetPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
-          AppLocalizations.of(context)!.translate('title')!,
+          AppLocalizations.of(context)!.translate('title'),
         ),
 
         // These are the 3 dots options in the top right corner.
@@ -323,7 +323,7 @@ class _PetPageState extends State<PetPage> {
               PopupMenuItem(
                 value: 'instructions',
                 child: Text(
-                  AppLocalizations.of(context)!.translate('instructions')!,
+                  AppLocalizations.of(context)!.translate('instructions'),
                 ),
               ),
               const PopupMenuItem(
@@ -346,7 +346,7 @@ class _PetPageState extends State<PetPage> {
           children: [
             // Page heading
             Text(
-              AppLocalizations.of(context)!.translate('pet_information')!,
+              AppLocalizations.of(context)!.translate('pet_information'),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -357,24 +357,24 @@ class _PetPageState extends State<PetPage> {
             // User input fields
             buildInputField(
               controller: _nameController,
-              label: AppLocalizations.of(context)!.translate('pet_name')!,
+              label: AppLocalizations.of(context)!.translate('pet_name'),
             ),
             buildInputField(
               controller: _birthdayController,
-              label: AppLocalizations.of(context)!.translate('birthday')!,
-              hint: AppLocalizations.of(context)!.translate('birthday_hint')!,
+              label: AppLocalizations.of(context)!.translate('birthday'),
+              hint: AppLocalizations.of(context)!.translate('birthday_hint'),
             ),
             buildInputField(
               controller: _speciesController,
-              label: AppLocalizations.of(context)!.translate('species')!,
+              label: AppLocalizations.of(context)!.translate('species'),
             ),
             buildInputField(
               controller: _colourController,
-              label: AppLocalizations.of(context)!.translate('colour')!,
+              label: AppLocalizations.of(context)!.translate('colour'),
             ),
             buildInputField(
               controller: _ownerIdController,
-              label: AppLocalizations.of(context)!.translate('owner_id')!,
+              label: AppLocalizations.of(context)!.translate('owner_id'),
             ),
 
             const SizedBox(height: 10),
@@ -385,7 +385,7 @@ class _PetPageState extends State<PetPage> {
               ElevatedButton(
                 onPressed: _addPet,
                 child: Text(
-                  AppLocalizations.of(context)!.translate('save_pet')!,
+                  AppLocalizations.of(context)!.translate('save_pet'),
                 ),
               )
             else
@@ -395,14 +395,14 @@ class _PetPageState extends State<PetPage> {
                   ElevatedButton(
                     onPressed: _updatePet,
                     child: Text(
-                      AppLocalizations.of(context)!.translate('update_pet')!,
+                      AppLocalizations.of(context)!.translate('update_pet'),
                     ),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _deletePet,
                     child: Text(
-                      AppLocalizations.of(context)!.translate('delete_pet')!,
+                      AppLocalizations.of(context)!.translate('delete_pet'),
                     ),
                   ),
                 ],
@@ -417,14 +417,14 @@ class _PetPageState extends State<PetPage> {
                 ElevatedButton(
                   onPressed: _copyPreviousPet,
                   child: Text(
-                    AppLocalizations.of(context)!.translate('copy_pet')!,
+                    AppLocalizations.of(context)!.translate('copy_pet'),
                   ),
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _clearFields,
                   child: Text(
-                    AppLocalizations.of(context)!.translate('clear_form')!,
+                    AppLocalizations.of(context)!.translate('clear_form'),
                   ),
                 ),
               ],
