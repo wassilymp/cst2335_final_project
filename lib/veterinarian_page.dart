@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
+import 'app_localizations.dart';
+import 'main.dart';
 import 'app_database.dart';
 import 'veterinarian.dart';
-
-// Name:Wassily Nshuti Mpunga
-// student no.:041199211
-// Project's Topic : vet
-//CST2335| Mr Fedor | Final project
 
 /// This page manages the Veterinarian module for the final project.
 ///
@@ -17,7 +14,7 @@ import 'veterinarian.dart';
 /// - update a selected veterinarian
 /// - delete a selected veterinarian
 /// - reuse the previously entered veterinarian information
-/// - switch between English and French
+/// - switch between English and French using app localization
 class VeterinarianPage extends StatefulWidget {
   /// Creates the veterinarian page.
   const VeterinarianPage({super.key});
@@ -53,12 +50,6 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
   /// If null, the page is in add mode.
   /// If not null, the page is in update/delete mode.
   Veterinarian? _selectedVet;
-
-  /// Tracks the current language mode.
-  ///
-  /// false = English
-  /// true = French
-  bool _isFrench = false;
 
   @override
   void initState() {
@@ -98,6 +89,8 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
   ///
   /// If no previous entry exists, a Snackbar is shown.
   Future<void> _copyPreviousVeterinarian() async {
+    final t = AppLocalizations.of(context)!;
+
     final String? savedName = await _prefs.getString('previous_vet_name');
     final String? savedBirthday =
     await _prefs.getString('previous_vet_birthday');
@@ -114,12 +107,7 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            _text(
-              english: 'No previous veterinarian information was found.',
-              french: 'Aucune information précédente sur le vétérinaire n’a été trouvée.',
-            ),
-          ),
+          content: Text(t.translate('no_previous_vet')),
         ),
       );
       return;
@@ -135,18 +123,15 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
   /// Adds a new veterinarian to the database after validating all fields.
   Future<void> _addVeterinarian() async {
+    final t = AppLocalizations.of(context)!;
+
     if (_nameController.text.trim().isEmpty ||
         _birthdayController.text.trim().isEmpty ||
         _addressController.text.trim().isEmpty ||
         _universityController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            _text(
-              english: 'Please fill in all fields.',
-              french: 'Veuillez remplir tous les champs.',
-            ),
-          ),
+          content: Text(t.translate('fill_all_fields')),
         ),
       );
       return;
@@ -171,27 +156,12 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
-            _text(
-              english: 'Success',
-              french: 'Succès',
-            ),
-          ),
-          content: Text(
-            _text(
-              english: 'Veterinarian saved successfully.',
-              french: 'Le vétérinaire a été enregistré avec succès.',
-            ),
-          ),
+          title: Text(t.translate('success')),
+          content: Text(t.translate('vet_saved')),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
-                _text(
-                  english: 'OK',
-                  french: 'OK',
-                ),
-              ),
+              child: Text(t.translate('ok')),
             ),
           ],
         );
@@ -201,6 +171,8 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
   /// Updates the selected veterinarian using the values currently in the form.
   Future<void> _updateVeterinarian() async {
+    final t = AppLocalizations.of(context)!;
+
     if (_selectedVet == null) return;
 
     if (_nameController.text.trim().isEmpty ||
@@ -209,12 +181,7 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
         _universityController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            _text(
-              english: 'Please fill in all fields.',
-              french: 'Veuillez remplir tous les champs.',
-            ),
-          ),
+          content: Text(t.translate('fill_all_fields')),
         ),
       );
       return;
@@ -237,57 +204,34 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          _text(
-            english: 'Veterinarian updated successfully.',
-            french: 'Le vétérinaire a été modifié avec succès.',
-          ),
-        ),
+        content: Text(t.translate('vet_updated')),
       ),
     );
   }
 
   /// Shows a confirmation dialog before deleting the selected veterinarian.
   Future<void> _confirmDeleteVeterinarian() async {
+    final t = AppLocalizations.of(context)!;
+
     if (_selectedVet == null) return;
 
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
-            _text(
-              english: 'Delete Veterinarian',
-              french: 'Supprimer le vétérinaire',
-            ),
-          ),
-          content: Text(
-            _text(
-              english: 'Are you sure you want to delete this veterinarian?',
-              french: 'Êtes-vous sûr de vouloir supprimer ce vétérinaire ?',
-            ),
-          ),
+          title: Text(t.translate('delete_vet')),
+          content: Text(t.translate('delete_confirm')),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
-                _text(
-                  english: 'Cancel',
-                  french: 'Annuler',
-                ),
-              ),
+              child: Text(t.translate('cancel')),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.pop(context);
                 await _deleteVeterinarian();
               },
-              child: Text(
-                _text(
-                  english: 'Delete',
-                  french: 'Supprimer',
-                ),
-              ),
+              child: Text(t.translate('delete')),
             ),
           ],
         );
@@ -297,6 +241,8 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
   /// Deletes the selected veterinarian from the database.
   Future<void> _deleteVeterinarian() async {
+    final t = AppLocalizations.of(context)!;
+
     if (_selectedVet == null) return;
 
     await database.veterinarianDao.deleteVeterinarian(_selectedVet!);
@@ -307,12 +253,7 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          _text(
-            english: 'Veterinarian deleted successfully.',
-            french: 'Le vétérinaire a été supprimé avec succès.',
-          ),
-        ),
+        content: Text(t.translate('vet_deleted')),
       ),
     );
   }
@@ -340,55 +281,20 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
     });
   }
 
-  /// Returns text based on the currently selected language.
-  String _text({
-    required String english,
-    required String french,
-  }) {
-    return _isFrench ? french : english;
-  }
-
   /// Shows the instructions dialog from the app bar menu.
   void _showInstructions() {
+    final t = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(
-            _text(
-              english: 'Instructions',
-              french: 'Instructions',
-            ),
-          ),
-          content: Text(
-            _text(
-              english:
-              'To use this page:\n\n'
-                  '- Fill in all veterinarian fields\n'
-                  '- Click Save Veterinarian to add a record\n'
-                  '- Tap a veterinarian in the list to update or delete it\n'
-                  '- Use Copy Previous Veterinarian to reuse old information\n'
-                  '- Use Clear Form to reset the page\n'
-                  '- Use the top-right menu to switch language',
-              french:
-              'Pour utiliser cette page :\n\n'
-                  '- Remplissez tous les champs du vétérinaire\n'
-                  '- Cliquez sur Enregistrer pour ajouter un dossier\n'
-                  '- Touchez un vétérinaire dans la liste pour le modifier ou le supprimer\n'
-                  '- Utilisez Copier le vétérinaire précédent pour réutiliser les informations\n'
-                  '- Utilisez Effacer le formulaire pour réinitialiser la page\n'
-                  '- Utilisez le menu en haut à droite pour changer la langue',
-            ),
-          ),
+          title: Text(t.translate('instructions')),
+          content: Text(t.translate('instructions_text')),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(
-                _text(
-                  english: 'OK',
-                  french: 'OK',
-                ),
-              ),
+              child: Text(t.translate('ok')),
             ),
           ],
         );
@@ -417,14 +323,11 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          _text(
-            english: 'Veterinarian Records',
-            french: 'Dossiers des vétérinaires',
-          ),
-        ),
+        title: Text(t.translate('vet_records')),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           PopupMenuButton<String>(
@@ -432,29 +335,24 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
               if (value == 'instructions') {
                 _showInstructions();
               } else if (value == 'language') {
-                setState(() {
-                  _isFrench = !_isFrench;
-                });
+                final currentCode =
+                    Localizations.localeOf(context).languageCode;
+
+                if (currentCode == 'en') {
+                  MyApp.setLocale(context, const Locale('fr', 'CA'));
+                } else {
+                  MyApp.setLocale(context, const Locale('en', 'US'));
+                }
               }
             },
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'instructions',
-                child: Text(
-                  _text(
-                    english: 'Instructions',
-                    french: 'Instructions',
-                  ),
-                ),
+                child: Text(t.translate('instructions')),
               ),
               PopupMenuItem(
                 value: 'language',
-                child: Text(
-                  _text(
-                    english: 'Switch Language',
-                    french: 'Changer la langue',
-                  ),
-                ),
+                child: Text(t.translate('switch_language')),
               ),
             ],
           ),
@@ -465,10 +363,7 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
         child: Column(
           children: [
             Text(
-              _text(
-                english: 'Veterinarian Information',
-                french: 'Informations sur le vétérinaire',
-              ),
+              t.translate('vet_information'),
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -477,46 +372,26 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
             const SizedBox(height: 15),
             _buildInputField(
               controller: _nameController,
-              label: _text(
-                english: 'Name',
-                french: 'Nom',
-              ),
+              label: t.translate('name'),
             ),
             _buildInputField(
               controller: _birthdayController,
-              label: _text(
-                english: 'Birthday',
-                french: 'Date de naissance',
-              ),
-              hint: _text(
-                english: 'YYYY-MM-DD',
-                french: 'AAAA-MM-JJ',
-              ),
+              label: t.translate('birthday'),
+              hint: t.translate('yyyy_mm_dd'),
             ),
             _buildInputField(
               controller: _addressController,
-              label: _text(
-                english: 'Address',
-                french: 'Adresse',
-              ),
+              label: t.translate('address'),
             ),
             _buildInputField(
               controller: _universityController,
-              label: _text(
-                english: 'University',
-                french: 'Université',
-              ),
+              label: t.translate('university'),
             ),
             const SizedBox(height: 10),
             if (_selectedVet == null)
               ElevatedButton(
                 onPressed: _addVeterinarian,
-                child: Text(
-                  _text(
-                    english: 'Save Veterinarian',
-                    french: 'Enregistrer le vétérinaire',
-                  ),
-                ),
+                child: Text(t.translate('save_vet')),
               )
             else
               Row(
@@ -524,22 +399,12 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
                 children: [
                   ElevatedButton(
                     onPressed: _updateVeterinarian,
-                    child: Text(
-                      _text(
-                        english: 'Update Veterinarian',
-                        french: 'Modifier le vétérinaire',
-                      ),
-                    ),
+                    child: Text(t.translate('update_vet')),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _confirmDeleteVeterinarian,
-                    child: Text(
-                      _text(
-                        english: 'Delete Veterinarian',
-                        french: 'Supprimer le vétérinaire',
-                      ),
-                    ),
+                    child: Text(t.translate('delete_vet')),
                   ),
                 ],
               ),
@@ -549,22 +414,12 @@ class _VeterinarianPageState extends State<VeterinarianPage> {
               children: [
                 ElevatedButton(
                   onPressed: _copyPreviousVeterinarian,
-                  child: Text(
-                    _text(
-                      english: 'Copy Previous Veterinarian',
-                      french: 'Copier le vétérinaire précédent',
-                    ),
-                  ),
+                  child: Text(t.translate('copy_previous_vet')),
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _clearFields,
-                  child: Text(
-                    _text(
-                      english: 'Clear Form',
-                      french: 'Effacer le formulaire',
-                    ),
-                  ),
+                  child: Text(t.translate('clear_form')),
                 ),
               ],
             ),

@@ -1,64 +1,83 @@
-import  'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'app_localizations.dart';
 import 'pet_page.dart';
 import 'vaccine_page.dart';
 import 'veterinarian_page.dart';
 import 'PetOwnerListPage.dart';
 
-/// Main entry point of the group project application.
 void main() {
   runApp(const MyApp());
 }
 
-/// Root widget for the full group project.
-class MyApp extends StatelessWidget {
-  /// Creates the root application widget.
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  static void setLocale(BuildContext context, Locale newLocale) {
+    final _MyAppState? state =
+    context.findAncestorStateOfType<_MyAppState>();
+    state?.changeLanguage(newLocale);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = const Locale('en', 'US');
+
+  void changeLanguage(Locale newLocale) {
+    setState(() {
+      _locale = newLocale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Pet Records Hub',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFF5F5DC),
-        ),
-        useMaterial3: true,
-      ),
+      locale: _locale,
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('fr', 'CA'),
+      ],
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       home: const HomePage(),
     );
   }
 }
 
-/// Shared home page for the final project.
-///
-/// From this page, the user can choose which module to open.
 class HomePage extends StatelessWidget {
-  /// Creates the shared home page.
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pet Records Hub'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(t.translate('app_title')),
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Final Project Modules',
-              style: TextStyle(
+            Text(
+              t.translate('app_title'),
+              style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 30),
 
-            // Keren-Grace's module
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -71,8 +90,6 @@ class HomePage extends StatelessWidget {
               child: const Text('Pet Module - Keren-Grace'),
             ),
             const SizedBox(height: 15),
-
-            // Izzy's module
 
             ElevatedButton(
               onPressed: () {
@@ -87,7 +104,6 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Wassily's module
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -101,7 +117,6 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Khalil's module
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
