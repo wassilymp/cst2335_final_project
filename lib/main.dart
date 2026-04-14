@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'pet_page.dart';
 import 'vaccine_page.dart';
+import 'veterinarian_page.dart';
 
-// Main entry point of the group project application.
+/// Main entry point of the group project application.
 void main() {
   runApp(const MyApp());
 }
 
-// Root widget for the full group project.
+/// Root widget for the full group project.
 class MyApp extends StatelessWidget {
+  /// Creates the root application widget.
   const MyApp({super.key});
 
   @override
@@ -20,15 +22,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFFF5F5DC),
         ),
+        useMaterial3: true,
       ),
       home: const HomePage(),
     );
   }
 }
 
-// This is the shared home page for the final project.
-// From here, the user can choose which module to open.
+/// Shared home page for the final project.
+///
+/// From this page, the user can choose which module to open.
 class HomePage extends StatelessWidget {
+  /// Creates the shared home page.
   const HomePage({super.key});
 
   @override
@@ -82,9 +87,10 @@ class HomePage extends StatelessWidget {
             // Wassily's module
             ElevatedButton(
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Veterinarian module will be connected soon.'),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const VeterinarianPage(),
                   ),
                 );
               },
