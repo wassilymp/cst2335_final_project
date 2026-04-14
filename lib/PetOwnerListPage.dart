@@ -3,8 +3,8 @@ import 'PetOwner.dart';
 import 'PetOwnerDao.dart';
 import 'app_database.dart';
 
-// Name: Izzy (Your Name)
-// Student Number: (your student number)
+// Name: Israel Kabulu Tshunza
+// Student Number: 041109599
 // Project Topic: Pet Owner
 // Course: CST2335 | Final Project
 //
