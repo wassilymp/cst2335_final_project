@@ -3,6 +3,8 @@ import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 
 import 'app_database.dart';
 import 'pet.dart';
+import 'main.dart';
+import 'app_localizations.dart';
 
 // Name: Keren-Grace Niragi Muyangayanga
 // Student no.: 041173528
@@ -41,9 +43,6 @@ class _PetPageState extends State<PetPage> {
   // If it is null, the user is adding a new pet.
   // If it is not null, the user is editing or deleting a pet.
   Pet? _selectedPet;
-
-  // This is for switching the page between English and French.
-  bool _isFrench = false;
 
   // This runs once when the page opens.
   // I use it to prepare the database before the user starts using the page.
@@ -100,10 +99,7 @@ class _PetPageState extends State<PetPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _text(
-              english: 'No previous pet information was found.',
-              french: 'Aucune information précédente sur l’animal n’a été trouvée.',
-            ),
+            AppLocalizations.of(context)!.translate('no_previous_pet')!,
           ),
         ),
       );
@@ -130,10 +126,7 @@ class _PetPageState extends State<PetPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            _text(
-              english: 'Please fill in all fields.',
-              french: 'Veuillez remplir tous les champs.',
-            ),
+            AppLocalizations.of(context)!.translate('fill_fields')!,
           ),
         ),
       );
@@ -169,17 +162,18 @@ class _PetPageState extends State<PetPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(_text(english: 'Success', french: 'Succès')),
+          title: Text(
+            AppLocalizations.of(context)!.translate('success')!,
+          ),
           content: Text(
-            _text(
-              english: 'Pet saved successfully.',
-              french: 'L’animal a été enregistré avec succès.',
-            ),
+            AppLocalizations.of(context)!.translate('pet_saved')!,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(_text(english: 'OK', french: 'OK')),
+              child: Text(
+                AppLocalizations.of(context)!.translate('ok')!,
+              ),
             ),
           ],
         );
@@ -190,6 +184,21 @@ class _PetPageState extends State<PetPage> {
   // This updates the selected pet with the new values typed in the form.
   Future<void> _updatePet() async {
     if (_selectedPet == null) return;
+
+    if (_nameController.text.trim().isEmpty ||
+        _birthdayController.text.trim().isEmpty ||
+        _speciesController.text.trim().isEmpty ||
+        _colourController.text.trim().isEmpty ||
+        _ownerIdController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.translate('fill_fields')!,
+          ),
+        ),
+      );
+      return;
+    }
 
     final updatedPet = Pet(
       id: _selectedPet!.id,
@@ -242,14 +251,6 @@ class _PetPageState extends State<PetPage> {
     });
   }
 
-  // This helper chooses which text to show depending on the selected language.
-  String _text({
-    required String english,
-    required String french,
-  }) {
-    return _isFrench ? french : english;
-  }
-
   // This opens a small dialog that explains how to use the page.
   void _showInstructions() {
     showDialog(
@@ -257,35 +258,17 @@ class _PetPageState extends State<PetPage> {
       builder: (context) {
         return AlertDialog(
           title: Text(
-            _text(
-              english: 'Instructions',
-              french: 'Instructions',
-            ),
+            AppLocalizations.of(context)!.translate('instructions')!,
           ),
           content: Text(
-            _text(
-              english:
-              'To use this page:\n\n'
-                  '- Fill in all pet fields\n'
-                  '- Click Save Pet to add a pet\n'
-                  '- Tap a pet in the list to update or delete it\n'
-                  '- Use Copy Previous Pet to reuse old information\n'
-                  '- Use Clear Form to reset the page\n'
-                  '- Use the menu in the top right to change language',
-              french:
-              'Pour utiliser cette page :\n\n'
-                  '- Remplissez tous les champs\n'
-                  '- Cliquez sur Enregistrer pour ajouter un animal\n'
-                  '- Touchez un animal dans la liste pour le modifier ou le supprimer\n'
-                  '- Utilisez Copier l’animal précédent pour réutiliser les informations\n'
-                  '- Utilisez Effacer le formulaire pour réinitialiser la page\n'
-                  '- Utilisez le menu en haut à droite pour changer la langue',
-            ),
+            AppLocalizations.of(context)!.translate('instructions_text')!,
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(_text(english: 'OK', french: 'OK')),
+              child: Text(
+                AppLocalizations.of(context)!.translate('ok')!,
+              ),
             ),
           ],
         );
@@ -320,10 +303,7 @@ class _PetPageState extends State<PetPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
-          _text(
-            english: widget.title,
-            french: 'Dossiers des animaux',
-          ),
+          AppLocalizations.of(context)!.translate('title')!,
         ),
 
         // These are the 3 dots options in the top right corner.
@@ -333,30 +313,26 @@ class _PetPageState extends State<PetPage> {
             onSelected: (value) {
               if (value == 'instructions') {
                 _showInstructions();
-              } else if (value == 'language') {
-                setState(() {
-                  _isFrench = !_isFrench;
-                });
+              } else if (value == 'language_en') {
+                MyApp.setLocale(context, const Locale('en', 'CA'));
+              } else if (value == 'language_fr') {
+                MyApp.setLocale(context, const Locale('fr', 'CA'));
               }
             },
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'instructions',
                 child: Text(
-                  _text(
-                    english: 'Instructions',
-                    french: 'Instructions',
-                  ),
+                  AppLocalizations.of(context)!.translate('instructions')!,
                 ),
               ),
-              PopupMenuItem(
-                value: 'language',
-                child: Text(
-                  _text(
-                    english: 'Switch Language',
-                    french: 'Changer la langue',
-                  ),
-                ),
+              const PopupMenuItem(
+                value: 'language_en',
+                child: Text('English'),
+              ),
+              const PopupMenuItem(
+                value: 'language_fr',
+                child: Text('Français'),
               ),
             ],
           ),
@@ -370,10 +346,7 @@ class _PetPageState extends State<PetPage> {
           children: [
             // Page heading
             Text(
-              _text(
-                english: 'Pet Information',
-                french: 'Informations sur l’animal',
-              ),
+              AppLocalizations.of(context)!.translate('pet_information')!,
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -384,42 +357,24 @@ class _PetPageState extends State<PetPage> {
             // User input fields
             buildInputField(
               controller: _nameController,
-              label: _text(
-                english: 'Pet Name',
-                french: 'Nom de l’animal',
-              ),
+              label: AppLocalizations.of(context)!.translate('pet_name')!,
             ),
             buildInputField(
               controller: _birthdayController,
-              label: _text(
-                english: 'Birthday',
-                french: 'Date de naissance',
-              ),
-              hint: _text(
-                english: 'YYYY-MM-DD',
-                french: 'AAAA-MM-JJ',
-              ),
+              label: AppLocalizations.of(context)!.translate('birthday')!,
+              hint: AppLocalizations.of(context)!.translate('birthday_hint')!,
             ),
             buildInputField(
               controller: _speciesController,
-              label: _text(
-                english: 'Species',
-                french: 'Espèce',
-              ),
+              label: AppLocalizations.of(context)!.translate('species')!,
             ),
             buildInputField(
               controller: _colourController,
-              label: _text(
-                english: 'Colour',
-                french: 'Couleur',
-              ),
+              label: AppLocalizations.of(context)!.translate('colour')!,
             ),
             buildInputField(
               controller: _ownerIdController,
-              label: _text(
-                english: 'Owner ID',
-                french: 'ID du propriétaire',
-              ),
+              label: AppLocalizations.of(context)!.translate('owner_id')!,
             ),
 
             const SizedBox(height: 10),
@@ -430,10 +385,7 @@ class _PetPageState extends State<PetPage> {
               ElevatedButton(
                 onPressed: _addPet,
                 child: Text(
-                  _text(
-                    english: 'Save Pet',
-                    french: 'Enregistrer l’animal',
-                  ),
+                  AppLocalizations.of(context)!.translate('save_pet')!,
                 ),
               )
             else
@@ -443,20 +395,14 @@ class _PetPageState extends State<PetPage> {
                   ElevatedButton(
                     onPressed: _updatePet,
                     child: Text(
-                      _text(
-                        english: 'Update Pet',
-                        french: 'Modifier l’animal',
-                      ),
+                      AppLocalizations.of(context)!.translate('update_pet')!,
                     ),
                   ),
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _deletePet,
                     child: Text(
-                      _text(
-                        english: 'Delete Pet',
-                        french: 'Supprimer l’animal',
-                      ),
+                      AppLocalizations.of(context)!.translate('delete_pet')!,
                     ),
                   ),
                 ],
@@ -471,20 +417,14 @@ class _PetPageState extends State<PetPage> {
                 ElevatedButton(
                   onPressed: _copyPreviousPet,
                   child: Text(
-                    _text(
-                      english: 'Copy Previous Pet',
-                      french: 'Copier l’animal précédent',
-                    ),
+                    AppLocalizations.of(context)!.translate('copy_pet')!,
                   ),
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: _clearFields,
                   child: Text(
-                    _text(
-                      english: 'Clear Form',
-                      french: 'Effacer le formulaire',
-                    ),
+                    AppLocalizations.of(context)!.translate('clear_form')!,
                   ),
                 ),
               ],

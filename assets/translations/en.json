@@ -1,0 +1,18 @@
+{
+  "title": "Pet Records",
+  "pet_information": "Pet Information",
+  "pet_name": "Pet Name",
+  "birthday": "Birthday",
+  "species": "Species",
+  "colour": "Colour",
+  "owner_id": "Owner ID",
+  "save_pet": "Save Pet",
+  "update_pet": "Update Pet",
+  "delete_pet": "Delete Pet",
+  "copy_pet": "Copy Previous Pet",
+  "clear": "Clear Form",
+  "instructions": "Instructions",
+  "success": "Success",
+  "pet_saved": "Pet saved successfully.",
+  "fill_fields": "Please fill in all fields."
+}
