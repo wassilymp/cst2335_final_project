@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 15),
 
-            // Izzy's module
+            // Israel's module
 
             ElevatedButton(
               onPressed: () {
