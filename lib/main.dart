@@ -4,6 +4,7 @@ import 'vaccine_page.dart';
 import 'veterinarian_page.dart';
 import 'PetOwnerListPage.dart';
 
+
 /// Main entry point of the group project application.
 void main() {
   runApp(const MyApp());
@@ -19,13 +20,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Pet Records Hub',
+      home: const HomePage(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFFF5F5DC),
         ),
         useMaterial3: true,
       ),
-      home: const HomePage(),
     );
   }
 }
@@ -83,7 +84,7 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               },
-              child: const Text('Pet Owner Module - Izzy'),
+              child: const Text('Pet Owner Module - Israel'),
             ),
             const SizedBox(height: 15),
 

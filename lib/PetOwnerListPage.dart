@@ -3,6 +3,17 @@ import 'PetOwner.dart';
 import 'PetOwnerDao.dart';
 import 'app_database.dart';
 
+// Name: Izzy (Your Name)
+// Student Number: (your student number)
+// Project Topic: Pet Owner
+// Course: CST2335 | Final Project
+//
+// This page displays a list of pet owners and allows users to:
+// - Add new pet owners
+// - Edit existing pet owners
+// - Delete pet owners
+// - View instructions via the ActionBar
+
 class PetOwnerListPage extends StatefulWidget {
   const PetOwnerListPage({super.key});
 
@@ -11,24 +22,34 @@ class PetOwnerListPage extends StatefulWidget {
 }
 
 class _PetOwnerListPageState extends State<PetOwnerListPage> {
+
+  // DAO used to interact with the database
   late PetOwnerDao dao;
 
+  // List of all pet owners retrieved from database
   List<PetOwner> owners = [];
+
+  // Currently selected owner (used for editing)
   PetOwner? selectedOwner;
+
+  // Determines whether the form view is shown
   bool isEditing = false;
 
+  // Controllers for input fields
   final fName = TextEditingController();
   final lName = TextEditingController();
   final addr = TextEditingController();
   final dob = TextEditingController();
   final insurance = TextEditingController();
 
+  // Initializes the database when the page loads
   @override
   void initState() {
     super.initState();
     initDb();
   }
 
+  // Builds the Floor database and initializes DAO
   Future<void> initDb() async {
     final db =
     await $FloorAppDatabase.databaseBuilder('app.db').build();
@@ -37,27 +58,13 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     loadOwners();
   }
 
+  // Loads all pet owners from the database
   Future<void> loadOwners() async {
     final data = await dao.findAllOwners();
     setState(() => owners = data);
   }
 
-  // ✅ CALENDAR FUNCTION
-  Future<void> _selectDate() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now().subtract(const Duration(days: 365 * 20)),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-    );
-
-    if (picked != null) {
-      dob.text =
-      "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-      setState(() {});
-    }
-  }
-
+  // Styling for all input fields
   InputDecoration inputStyle(String label) {
     return InputDecoration(
       labelText: label,
@@ -69,7 +76,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     );
   }
 
-  // Instructions dialog
+  // Displays instructions dialog from the ActionBar
   void showInstructions() {
     showDialog(
       context: context,
@@ -78,6 +85,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
         content: const Text(
           '• Tap + to add a new pet owner\n'
               '• Fill in all required fields\n'
+              '• Enter DOB as YYYY-MM-DD\n'
               '• Tap Save to store the owner\n'
               '• Tap an owner to edit or delete\n'
               '• Insurance is optional',
@@ -92,12 +100,26 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     );
   }
 
+  // Saves a new or updated pet owner
   Future<void> save() async {
+
+    // Regex to validate date format
+    final dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+
+    // Validates required fields and date format
     if (fName.text.isEmpty ||
         lName.text.isEmpty ||
         addr.text.isEmpty ||
-        dob.text.isEmpty) return;
+        dob.text.isEmpty ||
+        !dateRegex.hasMatch(dob.text)) {
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Enter DOB as YYYY-MM-DD')),
+      );
+      return;
+    }
+
+    // Creates PetOwner object
     final owner = PetOwner(
       id: selectedOwner?.id,
       firstName: fName.text,
@@ -107,6 +129,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
       insurance: insurance.text,
     );
 
+    // Inserts or updates based on selection
     if (selectedOwner == null) {
       await dao.insertOwner(owner);
     } else {
@@ -118,6 +141,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     setState(() => isEditing = false);
   }
 
+  // Deletes the selected pet owner
   Future<void> delete() async {
     await dao.deleteOwner(selectedOwner!);
     clear();
@@ -125,6 +149,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     setState(() => isEditing = false);
   }
 
+  // Clears all input fields and resets selection
   void clear() {
     selectedOwner = null;
     fName.clear();
@@ -134,11 +159,14 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     insurance.clear();
   }
 
+  // Builds the main
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pet Owners'),
+
+        // ActionBar button for instructions
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
@@ -146,7 +174,11 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
           ),
         ],
       ),
+
+      // Switches between list view and form view
       body: isEditing ? form() : list(),
+
+      // Floating button to add new owner
       floatingActionButton: !isEditing
           ? FloatingActionButton(
         onPressed: () => setState(() => isEditing = true),
@@ -156,6 +188,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     );
   }
 
+  // Displays list of pet owners
   Widget list() {
     if (owners.isEmpty) {
       return const Center(child: Text('No owners yet'));
@@ -165,9 +198,12 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
       itemCount: owners.length,
       itemBuilder: (context, i) {
         final o = owners[i];
+
         return ListTile(
           title: Text('${o.firstName} ${o.lastName}'),
           subtitle: Text(o.address),
+
+          // Loads selected owner into form for editing
           onTap: () {
             selectedOwner = o;
             fName.text = o.firstName;
@@ -175,6 +211,7 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
             addr.text = o.address;
             dob.text = o.dob;
             insurance.text = o.insurance ?? '';
+
             setState(() => isEditing = true);
           },
         );
@@ -182,36 +219,52 @@ class _PetOwnerListPageState extends State<PetOwnerListPage> {
     );
   }
 
+  // Displays form for adding/editing owners
   Widget form() {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ListView(
         children: [
+
+          // First name input
           TextField(controller: fName, decoration: inputStyle('First Name')),
           const SizedBox(height: 10),
+
+          // Last name input
           TextField(controller: lName, decoration: inputStyle('Last Name')),
           const SizedBox(height: 10),
+
+          // Address input
           TextField(controller: addr, decoration: inputStyle('Address')),
           const SizedBox(height: 10),
 
-          // ✅ UPDATED DOB FIELD WITH CALENDAR
+          // Date of Birth input (manual format)
           TextField(
             controller: dob,
-            readOnly: true,
-            onTap: _selectDate,
-            decoration: inputStyle('Date of Birth').copyWith(
-              suffixIcon: const Icon(Icons.calendar_today),
+            keyboardType: TextInputType.datetime,
+            decoration: inputStyle('Date of Birth (YYYY-MM-DD)').copyWith(
+              hintText: 'YYYY-MM-DD',
             ),
           ),
 
           const SizedBox(height: 10),
+
+          // Optional insurance field
           TextField(
-              controller: insurance,
-              decoration: inputStyle('Insurance (Optional)')),
+            controller: insurance,
+            decoration: inputStyle('Insurance (Optional)'),
+          ),
+
           const SizedBox(height: 20),
+
+          // Save button
           ElevatedButton(onPressed: save, child: const Text('Save')),
+
+          // Delete button (only shown when editing)
           if (selectedOwner != null)
             ElevatedButton(onPressed: delete, child: const Text('Delete')),
+
+          // Cancel button
           TextButton(
             onPressed: () => setState(() => isEditing = false),
             child: const Text('Cancel'),
